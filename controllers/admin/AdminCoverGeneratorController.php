@@ -52,7 +52,7 @@ class AdminCoverGeneratorController extends ModuleAdminController
                     'input' =>[
                         ['name'=>'titre','label' => 'Titre','type' => 'text','required' => true,'lang' => true,],
                         ['name'=>'id_blog','label' => 'Id blog','type' => 'text',],
-
+                        [
                             'name'=>'logo',
                             'label' => 'Logo',
                             'type' => 'select',
@@ -148,13 +148,18 @@ class AdminCoverGeneratorController extends ModuleAdminController
     {
         $path= _PS_BASE_URL_.__PS_BASE_URI__.'modules/cafe_covergenerator/images/miniatures/'.$value['path_image_mini'];
 
-        return '<img style="max-width:200px;" class="img-fluid" src="'.$path.'">';
+        return '<img class="col-md-4 img-fluid" src="'.$path.'">
+        <a href="'.$path.'" download="'.Tools::str2url($value['titre']).'">download</a>
+        ';
     }
     public function printImgCover($tr, $value)
     {
+
         $path= _PS_BASE_URL_.__PS_BASE_URI__.'modules/cafe_covergenerator/images/covers/'.$value['path_image_cover'];
 
-        return '<img style="max-width:200px;" class="img-fluid" src="'.$path.'">';
+        return '<img class="col-md-4 img-fluid" src="'.$path.'">
+        <a href="'.$path.'" download="'.Tools::str2url($value['titre']).'">download</a>
+        ';
     }
 
     

@@ -52,6 +52,8 @@ class CoverGenerator extends ObjectModel
 
     public function delete()
     {
+        
+
         return parent::delete();
     }
 
