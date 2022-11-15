@@ -12,6 +12,7 @@ class CoverGenerator extends ObjectModel
     public $id_cafe_covergenerator;
     public $id_blog;
     public $titre;
+    public $path_image_original;
     public $path_image_mini;
     public $path_image_cover;
     public $date_add;
@@ -26,6 +27,7 @@ class CoverGenerator extends ObjectModel
             'id_blog' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'length' => 10],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE,'validate' => 'isDate'],
+            'path_image_original' => ['type' => self::TYPE_STRING, 'validate' => 'isString'],
 
             /* Lang fields */
             'titre' => ['type' => self::TYPE_STRING, 'validate' => 'isString','lang' => true,'required' => true,],
@@ -52,9 +54,33 @@ class CoverGenerator extends ObjectModel
 
     public function delete()
     {
-        
+        $image_original = $this->path_image_original;
+        $image_covers = $this->path_image_cover;
+        $image_minis = $this->path_image_mini;
 
-        return parent::delete();
+        $path_mini = _PS_MODULE_DIR_.'cafe_covergenerator/images/miniatures/';
+        $path_cover = _PS_MODULE_DIR_.'cafe_covergenerator/images/covers/';
+        $path_original = _PS_MODULE_DIR_.'cafe_covergenerator/images/originals/';
+
+        // on efface toutes les images lors de la désinstallation
+        if (is_file($path_original.$image_original)) {
+            @unlink($path_original.$image_original);
+        }
+
+        foreach ((array)$image_minis as $mini) {
+            if (is_file($path_mini.$mini)) {
+                @unlink($path_mini.$mini);
+            }
+        }
+
+        foreach ((array)$image_covers as $cover) {
+            if (is_file($path_cover.$cover)) {
+                @unlink($path_cover.$cover);
+            }
+        }
+
+
+        return parent::delete(true);
     }
 
     public static function installSql(): bool
@@ -64,6 +90,7 @@ class CoverGenerator extends ObjectModel
                 "CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."cafe_covergenerator`(
                 `id_cafe_covergenerator` int(10)  NOT NULL AUTO_INCREMENT,
                 `id_blog` int(10) NULL,
+                `path_image_original` VARCHAR (255) NULL,
                 `date_add` datetime NOT NULL,
                 `date_upd` datetime NOT NULL,
                 PRIMARY KEY (`id_cafe_covergenerator`)

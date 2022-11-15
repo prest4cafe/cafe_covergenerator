@@ -19,7 +19,7 @@ class Cafe_covergenerator extends Module
         $this->bootstrap = true;
         parent::__construct();
         $this->displayName = $this->l('cafe_covergenerator');
-        $this->description = $this->l('generate blog covers');
+        $this->description = $this->l('Generate blog covers');
     }
 
     /**
@@ -153,6 +153,7 @@ class Cafe_covergenerator extends Module
         );
     }
 
+
     public function hookActionObjectCoverGeneratorAddAfter($params)
     {
         // path
@@ -162,19 +163,23 @@ class Cafe_covergenerator extends Module
         $path_mini = _PS_MODULE_DIR_.'cafe_covergenerator/images/miniatures/';
         $path_cover = _PS_MODULE_DIR_.'cafe_covergenerator/images/covers/';
 
+
         $logo = Tools::getValue('logo');
         $hex = Tools::getValue('TK_THEME_BG_COLOR');
 
         //image preprocess
         // voir try catch
+        // retourne le nom de l'image
         try {
-            $this->uploadImage($_FILES['image']['name'], $path);
+            $path_original = $this->uploadImage($_FILES['image']['name'], $path, (int)$params['object']->id);
         } catch(Exception $e) {
             echo $e;
         }
 
+        
+
         // instancie de l'image d'origine
-        $image_cover = new Imagick($path. $_FILES['image']['name']);
+        $image_cover = new Imagick($path. $path_original);
 
         // creation d'un rectangle gris avec opacité a 0.8
         $background = new Imagick();
@@ -262,7 +267,9 @@ class Cafe_covergenerator extends Module
                     $mini->writeImage($path_mini . $key . '-mini-' . $params['object']->id . '-' . $rewrite . '.png');
 
                     // generation cover
-                    $cover = new Imagick($path. $_FILES['image']['name']);
+
+                    $cover = new Imagick($path. $path_original);
+
                     $cover->compositeImage($mini, Imagick::COMPOSITE_DEFAULT, 0, 0);
                     $cover->cropImage(1920, 750, 0, 0);
                     $cover->writeImage($path_cover . $key . '-cover-' . $params['object']->id . '-' . $rewrite . '.png'); //replace original background
@@ -283,7 +290,7 @@ class Cafe_covergenerator extends Module
                     $mini2->writeImage($path_mini . $key . '-mini-' . $params['object']->id . '-' . $rewrite . '.png');
 
                     // generation cover
-                    $cover2 = new Imagick($path. $_FILES['image']['name']);
+                    $cover2 = new Imagick($path. $path_original);
 
                     $cover2->compositeImage($mini2, Imagick::COMPOSITE_DEFAULT, 0, 0);
                     $cover2->cropImage(1920, 750, 0, 0);
@@ -303,6 +310,7 @@ class Cafe_covergenerator extends Module
         $obj->titre = $titre;
         $obj->path_image_mini = $mini_path;
         $obj->path_image_cover = $cover_path;
+        $obj->path_image_original = $path_original;
 
         $obj->update();
 
@@ -410,17 +418,20 @@ class Cafe_covergenerator extends Module
         //$image->destroy();
     }
 
-    public function uploadImage($image_cover, $path)
+    // retourne le nom de l'image
+    public function uploadImage($image_cover, $path, $id)
     {
         // on verifie que c'est bien une image
         // autorié jpg, jpeg, png
         //si c une image on upload sinon on cree une exeption
         //on upload l'image d'origine
         $uploader = new \Uploader('image');
-        $uploader->setSavePath($path);
-        $uploader->process($image_cover);
 
-        return true;
+       
+        $uploader->setSavePath($path);
+        $uploader->process($id.'-'.$image_cover);
+
+        return $id.'-'.$image_cover;
     }
 
     
