@@ -17,9 +17,10 @@ class Cafe_covergenerator extends Module
         $this->version = '1.0.0';
         $this->author = 'presta.cafe';
         $this->bootstrap = true;
-        parent::__construct();
         $this->displayName = $this->l('cafe_covergenerator');
         $this->description = $this->l('Generate blog covers');
+
+        parent::__construct();
     }
 
     /**
@@ -176,7 +177,7 @@ class Cafe_covergenerator extends Module
             echo $e;
         }
 
-        
+
 
         // instancie de l'image d'origine
         $image_cover = new Imagick($path. $path_original);
@@ -187,9 +188,9 @@ class Cafe_covergenerator extends Module
         // on converti la couleur en rgb
         if ($hex) {
             list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
-            $background->newImage(750, 750, new ImagickPixel('rgba('.$r.'%, '.$g.'%, '.$b.'%, 0.8)'));
+            $background->newImage(750, 750, new ImagickPixel('rgba('.$r.', '.$g.', '.$b.', 0.8)'));
         } else {
-            $background->newImage(750, 750, new ImagickPixel('rgba(50.2%, 50.2%, 50.2%, 0.8)'));
+            $background->newImage(750, 750, new ImagickPixel('rgba(211, 211, 211, 0.8)'));
         }
         $background->setImageFormat('png');
 
@@ -305,117 +306,12 @@ class Cafe_covergenerator extends Module
             }
         }
 
-
-
         $obj->titre = $titre;
         $obj->path_image_mini = $mini_path;
         $obj->path_image_cover = $cover_path;
         $obj->path_image_original = $path_original;
 
         $obj->update();
-
-
-        /* Output the image with headers */
-        //$overlay->destroy();
-        //$image->destroy();
-    }
-
-
-
-
-
-    protected function postProcess()
-    {
-        /*        $obj = new CoverGenerator();
-
-                $path = _PS_MODULE_DIR_.'cafe_covergenerator/images/';
-                $path_font = _PS_MODULE_DIR_.'cafe_covergenerator/fonts/';
-                $path_logo = _PS_MODULE_DIR_.'cafe_covergenerator/images/logos/';
-                $path_mini = _PS_MODULE_DIR_.'cafe_covergenerator/images/miniatures/';
-                $path_cover = _PS_MODULE_DIR_.'cafe_covergenerator/images/covers/';
-
-                $uploader = new \Uploader('image');
-                $uploader->setSavePath(_PS_MODULE_DIR_.'cafe_covergenerator/images');
-                $uploader->process($image_cover);
-
-                $image_cover = $_FILES['image']['name'];
-
-                $image_cover= new Imagick($path. $_FILES['image']['name']);
-
-                $logo = new Imagick($path_logo . 'prestashop-logo.png');
-                $logo->resizeImage(207, 167, Imagick::FILTER_LANCZOS, 1);
-
-
-
-                $background = new Imagick();
-                $background->newImage(750, 750, new ImagickPixel('rgba(50.2%, 50.2%, 50.2%, 0.8)'));
-                $background->setImageFormat('png');
-
-                $mini = new Imagick();
-                $pixel = new ImagickPixel();
-
-
-                $mini->newImage(750, 750, $pixel);
-
-
-                $mini->setImageFormat('png');
-
-
-                $mini->compositeImage($image_cover, Imagick::COMPOSITE_DEFAULT, 0, 0);
-                $mini->compositeImage($background, Imagick::COMPOSITE_DEFAULT, 0, 0);
-
-                $x = 80;
-                $y= 50;
-                $mini->compositeImage($logo, Imagick::COMPOSITE_DEFAULT, $x, $y);
-
-                $draw = new ImagickDraw();
-
-                $draw->setFillColor('black');
-                $draw->setFont($path_font . 'DejaVu_Sans/DejaVuSansCondensed-bold.ttf');
-                $draw->setFontSize(65);
-                $x = 80;
-                $y= 280;
-                $angle = 0;
-                $padding = 10;
-
-                $text = Tools::getValue('titre');
-
-                $newtext = wordwrap($text, 15, "\n");
-                $newtext = strtoupper($newtext);
-
-                $mini_rewrite = 'mini-' . Tools::str2url($newtext);
-
-                $date_id = date("YmdHis");
-
-                $mini->annotateImage($draw, $x, $y+$padding, $angle, $newtext);
-                $mini->writeImage($path_mini . $mini_rewrite . '-'. $date_id . '.png'); //replace original background
-
-                $cover = new Imagick($path. $_FILES['image']['name']);
-                $cover->compositeImage($mini, Imagick::COMPOSITE_DEFAULT, 0, 0);
-                $cover->cropImage(1920, 750, 0, 0);
-
-                $cover_rewrite = 'cover-' . Tools::str2url($newtext);
-
-                $cover->writeImage($path_cover . $cover_rewrite . '-'. $date_id . '.png'); //replace original background
-
-
-                $obj->path_image_mini = $mini_rewrite. '-'. $date_id;
-                $obj->path_image_cover = $cover_rewrite. '-'. $date_id;
-                $obj->titre = $newtext;
-
-                $obj->update();*/
-
-
-        //$image1 = new Imagick($path . $_FILES['image1']['name']);
-
-        //$composition =
-
-        /* Output the image with headers */
-        // header('Content-type: image/png');
-        // echo $cover;
-
-        //$overlay->destroy();
-        //$image->destroy();
     }
 
     // retourne le nom de l'image
@@ -427,12 +323,10 @@ class Cafe_covergenerator extends Module
         //on upload l'image d'origine
         $uploader = new \Uploader('image');
 
-       
+
         $uploader->setSavePath($path);
         $uploader->process($id.'-'.$image_cover);
 
         return $id.'-'.$image_cover;
     }
-
-    
 }

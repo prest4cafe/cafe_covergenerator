@@ -38,6 +38,14 @@ class CoverGenerator extends ObjectModel
 
     public function __construct($id = null, $id_lang = null, $id_shop = null)
     {
+
+        
+        $this->_path = __PS_BASE_URI__ .'modules/cafe_covergenerator/images/originals/';
+        $this->_path_font = __PS_BASE_URI__ .'modules/cafe_covergenerator/fonts/';
+        $this->_path_logo = __PS_BASE_URI__ .'modules/cafe_covergenerator/images/logos/';
+        $this->_path_mini = __PS_BASE_URI__ .'modules/cafe_covergenerator/images/miniatures/';
+        $this->_path_cover = __PS_BASE_URI__ .'modules/cafe_covergenerator/images/covers/';
+
         parent::__construct($id, $id_lang, $id_shop);
     }
 

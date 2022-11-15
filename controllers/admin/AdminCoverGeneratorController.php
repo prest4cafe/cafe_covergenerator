@@ -10,9 +10,10 @@ class AdminCoverGeneratorController extends ModuleAdminController
         $this->table = 'cafe_covergenerator';
         $this->className = 'CoverGenerator';
         $this->deleted = false;
-        $this->list_no_link = true;
+        $this->list_no_link = false;
         $this->addRowAction('edit');
         $this->addRowAction('delete');
+        $this->addRowAction('view');
         $this->context = Context::getContext();
         $this->required_database = false;
         $this->allow_export = false;
@@ -81,6 +82,23 @@ class AdminCoverGeneratorController extends ModuleAdminController
         return parent::renderForm();
     }
 
+    public function renderView()
+    {
+        if (!($obj = $this->loadObject(true))) {
+            return;
+        }
+        $tpl = $this->context->smarty->createTemplate(dirname(__FILE__).'\..\..\views\templates\admin\view.tpl');
+        $tpl->assign([
+            'covers' => $obj->path_image_cover,
+            'covers_mini' => $obj->path_image_mini,
+            'obj' => $obj,
+
+        ]
+            
+        );
+        return $tpl->fetch();
+    }
+
     public function postProcess()
     {
         parent::postProcess();
@@ -95,11 +113,10 @@ class AdminCoverGeneratorController extends ModuleAdminController
         }
     }
 
-	public function processAdd() {
-
-		parent::processAdd();
-
-	}
+    public function processAdd()
+    {
+        parent::processAdd();
+    }
 
     public function initToolbarTitle()
     {
@@ -114,7 +131,9 @@ class AdminCoverGeneratorController extends ModuleAdminController
             case 'view':
 
                 if (($CoverGenerator = $this->loadObject(true)) && Validate::isLoadedObject($CoverGenerator)) {
-                    $this->toolbar_title[] = sprintf('Editer une couverture:');
+                    $this->toolbar_title[] = sprintf('Couverture: ').$CoverGenerator->id;
+
+                    $this->renderView();
                 }
                 break;
             case 'add':
@@ -154,13 +173,9 @@ class AdminCoverGeneratorController extends ModuleAdminController
     }
     public function printImgCover($tr, $value)
     {
-
         $path= _PS_BASE_URL_.__PS_BASE_URI__.'modules/cafe_covergenerator/images/covers/'.$value['path_image_cover'];
 
-        return '<img class="col-md-4 img-fluid" src="'.$path.'">
-        <a href="'.$path.'" download="'.Tools::str2url($value['titre']).'">download</a>
-        ';
+        return '<img class="col-md-4 img-fluid" src="'.$path.'">';
     }
-
     
 }
