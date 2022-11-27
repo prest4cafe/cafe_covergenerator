@@ -135,4 +135,11 @@ class CoverGenerator extends ObjectModel
         }
         return $res;
     }
+
+    public static function getObjectByIdLang($id,$id_lang)
+    {
+        $obj = new CoverGenerator((int)$id,$id_lang);
+        
+        return $obj;
+    }
 }

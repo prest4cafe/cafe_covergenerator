@@ -87,11 +87,13 @@ class AdminCoverGeneratorController extends ModuleAdminController
         if (!($obj = $this->loadObject(true))) {
             return;
         }
+
+       
         $tpl = $this->context->smarty->createTemplate(dirname(__FILE__).'\..\..\views\templates\admin\view.tpl');
         $tpl->assign([
-            'covers' => $obj->path_image_cover,
-            'covers_mini' => $obj->path_image_mini,
+            
             'obj' => $obj,
+            'langs' => Language::getLanguages(false),
 
         ]
             
